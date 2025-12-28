@@ -1,0 +1,292 @@
+default_agent: aibom_agent_system_west
+agents:
+  aibom_agent_system:
+    name: aibom_agent_system
+    entrypoint: main.py
+    deployment_type: container
+    runtime_type: null
+    platform: linux/arm64
+    container_runtime: docker
+    source_path: /home/mom/Desktop/aibom2
+    aws:
+      execution_role: null
+      execution_role_auto_create: true
+      account: '339712707840'
+      region: us-east-1
+      ecr_repository: null
+      ecr_auto_create: false
+      s3_path: null
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: null
+      agent_arn: null
+      agent_session_id: null
+    codebuild:
+      project_name: null
+      execution_role: null
+      source_bucket: null
+    memory:
+      mode: STM_ONLY
+      memory_id: aibom_agent_system_mem-0xPROQ7FtB
+      memory_arn: arn:aws:bedrock-agentcore:us-east-1:339712707840:memory/aibom_agent_system_mem-0xPROQ7FtB
+      memory_name: aibom_agent_system_mem
+      event_expiry_days: 30
+      first_invoke_memory_check_done: true
+      was_created_by_toolkit: false
+    identity:
+      credential_providers: []
+      workload: null
+    aws_jwt:
+      enabled: false
+      audiences: []
+      signing_algorithm: ES384
+      issuer_url: null
+      duration_seconds: 300
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
+    api_key_env_var_name: null
+    api_key_credential_provider_name: null
+    is_generated_by_agentcore_create: false
+  aibom_agent_system_v2:
+    name: aibom_agent_system_v2
+    entrypoint: main.py
+    deployment_type: container
+    runtime_type: null
+    platform: linux/arm64
+    container_runtime: docker
+    source_path: /home/mom/Desktop/aibom2
+    aws:
+      execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKRuntime-us-east-1-a7a2546bb6
+      execution_role_auto_create: false
+      account: '339712707840'
+      region: us-east-1
+      ecr_repository: 339712707840.dkr.ecr.us-east-1.amazonaws.com/bedrock-agentcore-aibom_agent_system_v2
+      ecr_auto_create: false
+      s3_path: null
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: aibom_agent_system_v2-5G1NZL8Pnl
+      agent_arn: arn:aws:bedrock-agentcore:us-east-1:339712707840:runtime/aibom_agent_system_v2-5G1NZL8Pnl
+      agent_session_id: 573b0ad6-a310-44f4-a33b-226b00658808
+    codebuild:
+      project_name: bedrock-agentcore-aibom_agent_system_v2-builder
+      execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-a7a2546bb6
+      source_bucket: bedrock-agentcore-codebuild-sources-339712707840-us-east-1
+    memory:
+      mode: STM_ONLY
+      memory_id: aibom_agent_system_v2_mem-2eJjg5EINK
+      memory_arn: arn:aws:bedrock-agentcore:us-east-1:339712707840:memory/aibom_agent_system_v2_mem-2eJjg5EINK
+      memory_name: aibom_agent_system_v2_mem
+      event_expiry_days: 30
+      first_invoke_memory_check_done: true
+      was_created_by_toolkit: true
+    identity:
+      credential_providers: []
+      workload: null
+    aws_jwt:
+      enabled: false
+      audiences: []
+      signing_algorithm: ES384
+      issuer_url: null
+      duration_seconds: 300
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
+    api_key_env_var_name: null
+    api_key_credential_provider_name: null
+    is_generated_by_agentcore_create: false
+  aibom_simple:
+    name: aibom_simple
+    entrypoint: main_simple.py
+    deployment_type: container
+    runtime_type: null
+    platform: linux/arm64
+    container_runtime: docker
+    source_path: /home/mom/Desktop/aibom2
+    aws:
+      execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKRuntime-us-east-1-3c599ebad5
+      execution_role_auto_create: false
+      account: '339712707840'
+      region: us-east-1
+      ecr_repository: 339712707840.dkr.ecr.us-east-1.amazonaws.com/bedrock-agentcore-aibom_simple
+      ecr_auto_create: false
+      s3_path: null
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: null
+      agent_arn: null
+      agent_session_id: null
+    codebuild:
+      project_name: null
+      execution_role: null
+      source_bucket: null
+    memory:
+      mode: STM_ONLY
+      memory_id: aibom_simple_mem-nZp9OWD1We
+      memory_arn: arn:aws:bedrock-agentcore:us-east-1:339712707840:memory/aibom_simple_mem-nZp9OWD1We
+      memory_name: aibom_simple_mem
+      event_expiry_days: 30
+      first_invoke_memory_check_done: true
+      was_created_by_toolkit: true
+    identity:
+      credential_providers: []
+      workload: null
+    aws_jwt:
+      enabled: false
+      audiences: []
+      signing_algorithm: ES384
+      issuer_url: null
+      duration_seconds: 300
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
+    api_key_env_var_name: null
+    api_key_credential_provider_name: null
+    is_generated_by_agentcore_create: false
+  aibom_minimal:
+    name: aibom_minimal
+    entrypoint: main_simple.py
+    deployment_type: container
+    runtime_type: null
+    platform: linux/arm64
+    container_runtime: docker
+    source_path: /home/mom/Desktop/aibom2
+    aws:
+      execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKRuntime-us-east-1-917ade2fa0
+      execution_role_auto_create: false
+      account: '339712707840'
+      region: us-east-1
+      ecr_repository: 339712707840.dkr.ecr.us-east-1.amazonaws.com/bedrock-agentcore-aibom_minimal
+      ecr_auto_create: false
+      s3_path: null
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: aibom_minimal-u1yLF725Px
+      agent_arn: arn:aws:bedrock-agentcore:us-east-1:339712707840:runtime/aibom_minimal-u1yLF725Px
+      agent_session_id: cac4ed29-089f-46c3-a0e7-7765d32843c3
+    codebuild:
+      project_name: bedrock-agentcore-aibom_minimal-builder
+      execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-917ade2fa0
+      source_bucket: bedrock-agentcore-codebuild-sources-339712707840-us-east-1
+    memory:
+      mode: NO_MEMORY
+      memory_id: null
+      memory_arn: null
+      memory_name: null
+      event_expiry_days: 30
+      first_invoke_memory_check_done: false
+      was_created_by_toolkit: false
+    identity:
+      credential_providers: []
+      workload: null
+    aws_jwt:
+      enabled: false
+      audiences: []
+      signing_algorithm: ES384
+      issuer_url: null
+      duration_seconds: 300
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
+    api_key_env_var_name: null
+    api_key_credential_provider_name: null
+    is_generated_by_agentcore_create: false
+  aibom_agent_system_west:
+    name: aibom_agent_system_west
+    entrypoint: main.py
+    deployment_type: container
+    runtime_type: null
+    platform: linux/arm64
+    container_runtime: docker
+    source_path: /home/mom/Desktop/aibom2
+    aws:
+      execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKRuntime-us-west-2-b8fafb0d44
+      execution_role_auto_create: false
+      account: '339712707840'
+      region: us-west-2
+      ecr_repository: 339712707840.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-aibom_agent_system_west
+      ecr_auto_create: false
+      s3_path: null
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: aibom_agent_system_west-xJwUxW9sGq
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:339712707840:runtime/aibom_agent_system_west-xJwUxW9sGq
+      agent_session_id: 6b8640ab-6fd7-4347-854e-2e5ae1faab4a
+    codebuild:
+      project_name: bedrock-agentcore-aibom_agent_system_west-builder
+      execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-b8fafb0d44
+      source_bucket: bedrock-agentcore-codebuild-sources-339712707840-us-west-2
+    memory:
+      mode: STM_ONLY
+      memory_id: aibom_agent_system_west_mem-9z9a9zEXRv
+      memory_arn: arn:aws:bedrock-agentcore:us-west-2:339712707840:memory/aibom_agent_system_west_mem-9z9a9zEXRv
+      memory_name: aibom_agent_system_west_mem
+      event_expiry_days: 30
+      first_invoke_memory_check_done: true
+      was_created_by_toolkit: true
+    identity:
+      credential_providers: []
+      workload: null
+    aws_jwt:
+      enabled: false
+      audiences: []
+      signing_algorithm: ES384
+      issuer_url: null
+      duration_seconds: 300
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
+    api_key_env_var_name: null
+    api_key_credential_provider_name: null
+    is_generated_by_agentcore_create: false
