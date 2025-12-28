@@ -219,6 +219,12 @@ Key configuration options in `aibom_agent/config/settings.py`:
 - Use `agentcore status` to verify deployment health
 - Review the GenAI Observability Dashboard for performance insights
 
+## Acknowledgements
+
+This project builds upon the excellent work of the [OWASP AIBOM Generator](https://huggingface.co/spaces/GenAISecurityProject/OWASP-AIBOM-Generator) project. We extend our gratitude to the GenAI Security Project and the OWASP community for their pioneering work in establishing standards for AI Bill of Materials generation and ML model security analysis.
+
+The OWASP AIBOM Generator provides the foundational framework for generating standardized AIBOMs that this agent system leverages to create comprehensive security assessments and comparative analyses of machine learning models.
+
 ## Contributing
 
 1. Fork the repository
