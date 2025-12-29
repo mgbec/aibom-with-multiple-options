@@ -3,7 +3,9 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+import boto3
+from botocore.exceptions import ClientError
 
 from jinja2 import Environment, FileSystemLoader, Template
 from loguru import logger
@@ -14,9 +16,24 @@ from ..models.analysis_result import AnalysisResult, ComparisonResult
 class ReportGenerator:
     """Service for generating HTML reports from AIBOM analysis results."""
     
-    def __init__(self, output_dir: str):
+    def __init__(self, output_dir: str, s3_bucket: Optional[str] = None, aws_region: str = "us-east-1", 
+                 s3_presigned_url_expiry: int = 86400, s3_encryption: bool = True):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.s3_bucket = s3_bucket
+        self.aws_region = aws_region
+        self.s3_presigned_url_expiry = s3_presigned_url_expiry
+        self.s3_encryption = s3_encryption
+        
+        # Initialize S3 client if bucket is provided
+        self.s3_client = None
+        if self.s3_bucket:
+            try:
+                self.s3_client = boto3.client('s3', region_name=self.aws_region)
+                logger.info(f"S3 client initialized for bucket: {self.s3_bucket}")
+            except Exception as e:
+                logger.warning(f"Failed to initialize S3 client: {e}")
+                self.s3_client = None
         
         # Initialize Jinja2 environment
         self.jinja_env = Environment(
@@ -39,7 +56,7 @@ class ReportGenerator:
             result: AnalysisResult to generate report for
             
         Returns:
-            Path to the generated HTML report
+            Path or URL to the generated HTML report
         """
         logger.info(f"Generating single model report for: {result.model_name}")
         
@@ -56,15 +73,24 @@ class ReportGenerator:
             template = self.jinja_env.get_template('single_model_report.html')
             html_content = template.render(**template_data)
             
-            # Save report
+            # Generate report filename
             report_filename = f"aibom_report_{result.model_name.replace('/', '_')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
-            report_path = self.output_dir / report_filename
             
-            with open(report_path, 'w', encoding='utf-8') as f:
+            # Save locally first
+            local_report_path = self.output_dir / report_filename
+            with open(local_report_path, 'w', encoding='utf-8') as f:
                 f.write(html_content)
             
-            logger.info(f"Single model report generated: {report_path}")
-            return str(report_path)
+            # Upload to S3 if configured
+            if self.s3_client and self.s3_bucket:
+                s3_key = f"aibom-reports/{report_filename}"
+                s3_url = await self._upload_to_s3(local_report_path, s3_key)
+                if s3_url:
+                    logger.info(f"Single model report uploaded to S3: {s3_url}")
+                    return s3_url
+            
+            logger.info(f"Single model report generated locally: {local_report_path}")
+            return str(local_report_path)
             
         except Exception as e:
             logger.error(f"Failed to generate single model report: {e}")
@@ -78,7 +104,7 @@ class ReportGenerator:
             result: ComparisonResult to generate report for
             
         Returns:
-            Path to the generated HTML report
+            Path or URL to the generated HTML report
         """
         logger.info(f"Generating comparison report for {len(result.model_names)} models")
         
@@ -95,21 +121,81 @@ class ReportGenerator:
             template = self.jinja_env.get_template('comparison_report.html')
             html_content = template.render(**template_data)
             
-            # Save report
+            # Generate report filename
             models_str = "_vs_".join([name.replace('/', '_') for name in result.model_names])
             report_filename = f"aibom_comparison_{models_str}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
-            report_path = self.output_dir / report_filename
             
-            with open(report_path, 'w', encoding='utf-8') as f:
+            # Save locally first
+            local_report_path = self.output_dir / report_filename
+            with open(local_report_path, 'w', encoding='utf-8') as f:
                 f.write(html_content)
             
-            logger.info(f"Comparison report generated: {report_path}")
-            return str(report_path)
+            # Upload to S3 if configured
+            if self.s3_client and self.s3_bucket:
+                s3_key = f"aibom-reports/{report_filename}"
+                s3_url = await self._upload_to_s3(local_report_path, s3_key)
+                if s3_url:
+                    logger.info(f"Comparison report uploaded to S3: {s3_url}")
+                    return s3_url
+            
+            logger.info(f"Comparison report generated locally: {local_report_path}")
+            return str(local_report_path)
             
         except Exception as e:
             logger.error(f"Failed to generate comparison report: {e}")
             raise
     
+    async def _upload_to_s3(self, local_file_path: Path, s3_key: str) -> Optional[str]:
+        """
+        Upload a file to S3 and return a pre-signed URL for secure access.
+        
+        Args:
+            local_file_path: Path to the local file
+            s3_key: S3 object key
+            
+        Returns:
+            Pre-signed S3 URL if successful, None otherwise
+        """
+        try:
+            # Prepare upload arguments
+            extra_args = {
+                'ContentType': 'text/html',
+                'Metadata': {
+                    'generated-by': 'aibom-agent-system',
+                    'generated-at': datetime.now().isoformat()
+                }
+            }
+            
+            # Add encryption if enabled
+            if self.s3_encryption:
+                extra_args['ServerSideEncryption'] = 'AES256'
+            
+            # Upload file to S3 (private by default)
+            self.s3_client.upload_file(
+                str(local_file_path),
+                self.s3_bucket,
+                s3_key,
+                ExtraArgs=extra_args
+            )
+            
+            # Generate pre-signed URL with configurable expiry
+            presigned_url = self.s3_client.generate_presigned_url(
+                'get_object',
+                Params={'Bucket': self.s3_bucket, 'Key': s3_key},
+                ExpiresIn=self.s3_presigned_url_expiry
+            )
+            
+            expiry_hours = self.s3_presigned_url_expiry // 3600
+            logger.info(f"File uploaded to S3 with pre-signed URL (expires in {expiry_hours}h)")
+            return presigned_url
+            
+        except ClientError as e:
+            logger.error(f"Failed to upload to S3: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error during S3 upload: {e}")
+            return None
+
     def _create_default_templates(self) -> None:
         """Create default HTML templates if they don't exist."""
         

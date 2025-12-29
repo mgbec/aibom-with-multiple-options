@@ -88,7 +88,7 @@ agents:
     bedrock_agentcore:
       agent_id: aibom_agent_system_v2-5G1NZL8Pnl
       agent_arn: arn:aws:bedrock-agentcore:us-east-1:339712707840:runtime/aibom_agent_system_v2-5G1NZL8Pnl
-      agent_session_id: 6f812e8f-b99a-48f9-9735-e5590e15ec3e
+      agent_session_id: 9674ab4d-e96c-4122-ba9d-17035f2c1187
     codebuild:
       project_name: bedrock-agentcore-aibom_agent_system_v2-builder
       execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-a7a2546bb6

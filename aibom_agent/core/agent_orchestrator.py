@@ -32,7 +32,13 @@ class AIBOMAgentOrchestrator:
         self.aibom_generator = AIBOMGenerator(settings.aibom)
         self.bedrock_agent = BedrockAgentService(settings.aws)
         self.comparison_engine = ComparisonEngine()
-        self.report_generator = ReportGenerator(settings.output_dir)
+        self.report_generator = ReportGenerator(
+            settings.output_dir,
+            s3_bucket=settings.aws.s3_bucket,
+            aws_region=settings.aws.region,
+            s3_presigned_url_expiry=settings.aws.s3_presigned_url_expiry,
+            s3_encryption=settings.aws.s3_encryption
+        )
         
         self._initialized = False
     

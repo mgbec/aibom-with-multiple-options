@@ -4,6 +4,8 @@ AIBOM Agent System - AgentCore Runtime Implementation
 
 An intelligent agent system that automatically generates, compares, and analyzes 
 AI Bill of Materials (AIBOMs) for Hugging Face models using AWS AgentCore runtime.
+
+Reports are securely stored in S3 with pre-signed URLs for access.
 """
 
 import asyncio
@@ -28,6 +30,12 @@ def get_orchestrator(session_id: str):
         from aibom_agent.config.settings import Settings
         
         settings = Settings.load()
+        
+        # Set S3 bucket if not configured
+        if not settings.aws.s3_bucket:
+            settings.aws.s3_bucket = "aibom-reports-339712707840-us-east-1"
+            logger.info(f"Using default S3 bucket: {settings.aws.s3_bucket}")
+        
         orchestrator = AIBOMAgentOrchestrator(settings, session_id)
     return orchestrator
 
@@ -82,6 +90,7 @@ def invoke(payload: Dict[str, Any], context) -> Dict[str, Any]:
                 "security_issues_count": result.security_issues_count,
                 "compliance_gaps_count": result.compliance_gaps_count,
                 "report_path": result.report_path,
+                "report_access": "Pre-signed S3 URL (expires in 24h)" if result.report_path and result.report_path.startswith("https://") else "Local file path",
                 "aibom_summary": {
                     "components_count": len(result.aibom.components),
                     "vulnerabilities_count": len(result.aibom.vulnerabilities),
@@ -105,6 +114,7 @@ def invoke(payload: Dict[str, Any], context) -> Dict[str, Any]:
                 "total_security_issues": result.security_issues_count,
                 "total_compliance_gaps": result.compliance_gaps_count,
                 "report_path": result.report_path,
+                "report_access": "Pre-signed S3 URL (expires in 24h)" if result.report_path and result.report_path.startswith("https://") else "Local file path",
                 "comparison_summary": {
                     "common_components_count": len(result.comparison.common_components),
                     "unique_components_per_model": {
