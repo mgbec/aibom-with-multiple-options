@@ -17,20 +17,41 @@ class ReportGenerator:
     """Service for generating HTML reports from AIBOM analysis results."""
     
     def __init__(self, output_dir: str, s3_bucket: Optional[str] = None, aws_region: str = "us-east-1", 
-                 s3_presigned_url_expiry: int = 86400, s3_encryption: bool = True):
+                 s3_encryption: bool = True):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.s3_bucket = s3_bucket
         self.aws_region = aws_region
-        self.s3_presigned_url_expiry = s3_presigned_url_expiry
         self.s3_encryption = s3_encryption
         
         # Initialize S3 client if bucket is provided
         self.s3_client = None
         if self.s3_bucket:
             try:
-                self.s3_client = boto3.client('s3', region_name=self.aws_region)
-                logger.info(f"S3 client initialized for bucket: {self.s3_bucket}")
+                # Create S3 client with explicit region and signature version
+                from botocore.config import Config
+                
+                config = Config(
+                    signature_version='s3v4',
+                    region_name=self.aws_region
+                )
+                
+                self.s3_client = boto3.client('s3', region_name=self.aws_region, config=config)
+                
+                # Test S3 access by checking if bucket exists
+                try:
+                    self.s3_client.head_bucket(Bucket=self.s3_bucket)
+                    logger.info(f"S3 client initialized successfully for bucket: {self.s3_bucket}")
+                except ClientError as e:
+                    error_code = e.response['Error']['Code']
+                    if error_code == '404':
+                        logger.error(f"S3 bucket does not exist: {self.s3_bucket}")
+                    elif error_code == '403':
+                        logger.error(f"Access denied to S3 bucket: {self.s3_bucket}")
+                    else:
+                        logger.error(f"S3 bucket access error: {e}")
+                    self.s3_client = None
+                    
             except Exception as e:
                 logger.warning(f"Failed to initialize S3 client: {e}")
                 self.s3_client = None
@@ -147,14 +168,14 @@ class ReportGenerator:
     
     async def _upload_to_s3(self, local_file_path: Path, s3_key: str) -> Optional[str]:
         """
-        Upload a file to S3 and return a pre-signed URL for secure access.
+        Upload a file to S3 and return the S3 object path.
         
         Args:
             local_file_path: Path to the local file
             s3_key: S3 object key
             
         Returns:
-            Pre-signed S3 URL if successful, None otherwise
+            S3 object path if successful, None otherwise
         """
         try:
             # Prepare upload arguments
@@ -171,23 +192,27 @@ class ReportGenerator:
                 extra_args['ServerSideEncryption'] = 'AES256'
             
             # Upload file to S3 (private by default)
+            logger.info(f"Uploading file to S3: s3://{self.s3_bucket}/{s3_key}")
             self.s3_client.upload_file(
                 str(local_file_path),
                 self.s3_bucket,
                 s3_key,
                 ExtraArgs=extra_args
             )
+            logger.info("File uploaded successfully to S3")
             
-            # Generate pre-signed URL with configurable expiry
-            presigned_url = self.s3_client.generate_presigned_url(
-                'get_object',
-                Params={'Bucket': self.s3_bucket, 'Key': s3_key},
-                ExpiresIn=self.s3_presigned_url_expiry
-            )
+            # Verify the file exists
+            try:
+                self.s3_client.head_object(Bucket=self.s3_bucket, Key=s3_key)
+                logger.info("File verified in S3")
+            except ClientError as e:
+                logger.error(f"File verification failed: {e}")
+                return None
             
-            expiry_hours = self.s3_presigned_url_expiry // 3600
-            logger.info(f"File uploaded to S3 with pre-signed URL (expires in {expiry_hours}h)")
-            return presigned_url
+            # Return S3 object path
+            s3_path = f"s3://{self.s3_bucket}/{s3_key}"
+            logger.info(f"Report stored in S3: {s3_path}")
+            return s3_path
             
         except ClientError as e:
             logger.error(f"Failed to upload to S3: {e}")

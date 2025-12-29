@@ -99,7 +99,7 @@ agentcore invoke '{
 - `model_name` (string): Echo of the analyzed model name
 - `security_issues_count` (integer): Number of security issues identified (enhanced analysis may detect more issues)
 - `compliance_gaps_count` (integer): Number of compliance gaps found
-- `report_path` (string): Path to the generated HTML report with enhanced interactive sections
+- `report_path` (string): S3 object path to the generated HTML report with enhanced interactive sections
 - `aibom_summary` (object): Summary of AIBOM analysis
   - `components_count` (integer): Total number of components in the AIBOM
   - `vulnerabilities_count` (integer): Number of known vulnerabilities
@@ -163,7 +163,7 @@ The generated HTML reports now include detailed interactive sections:
 - `models_analyzed` (integer): Number of models successfully analyzed
 - `total_security_issues` (integer): Aggregate security issues across all models
 - `total_compliance_gaps` (integer): Aggregate compliance gaps across all models
-- `report_path` (string): Path to the generated comparison HTML report
+- `report_path` (string): S3 object path to the generated comparison HTML report
 - `comparison_summary` (object): Summary of comparison analysis
   - `common_components_count` (integer): Components shared by all models
   - `unique_components_per_model` (object): Map of model names to unique component counts
@@ -398,9 +398,10 @@ Distributed tracing is automatically enabled for:
 
 ### Data Privacy
 - Model metadata cached temporarily (30 minutes)
-- Reports stored for 30 days
+- Reports stored securely in private S3 buckets for 30 days
 - No model weights downloaded or stored
 - PII scrubbing in logs
+- All S3 objects encrypted with AES256
 
 ### Network Security
 - All communications over HTTPS/TLS

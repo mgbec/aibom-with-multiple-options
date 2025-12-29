@@ -36,6 +36,11 @@ def get_orchestrator(session_id: str):
             settings.aws.s3_bucket = "aibom-reports-339712707840-us-east-1"
             logger.info(f"Using default S3 bucket: {settings.aws.s3_bucket}")
         
+        # Ensure region matches bucket region
+        if settings.aws.s3_bucket and "us-east-1" in settings.aws.s3_bucket:
+            settings.aws.region = "us-east-1"
+            logger.info(f"Set AWS region to us-east-1 to match S3 bucket")
+        
         orchestrator = AIBOMAgentOrchestrator(settings, session_id)
     return orchestrator
 
@@ -90,7 +95,7 @@ def invoke(payload: Dict[str, Any], context) -> Dict[str, Any]:
                 "security_issues_count": result.security_issues_count,
                 "compliance_gaps_count": result.compliance_gaps_count,
                 "report_path": result.report_path,
-                "report_access": "Pre-signed S3 URL (expires in 24h)" if result.report_path and result.report_path.startswith("https://") else "Local file path",
+                "report_access": "S3 object path" if result.report_path and result.report_path.startswith("s3://") else "Local file path",
                 "aibom_summary": {
                     "components_count": len(result.aibom.components),
                     "vulnerabilities_count": len(result.aibom.vulnerabilities),
@@ -114,7 +119,7 @@ def invoke(payload: Dict[str, Any], context) -> Dict[str, Any]:
                 "total_security_issues": result.security_issues_count,
                 "total_compliance_gaps": result.compliance_gaps_count,
                 "report_path": result.report_path,
-                "report_access": "Pre-signed S3 URL (expires in 24h)" if result.report_path and result.report_path.startswith("https://") else "Local file path",
+                "report_access": "S3 object path" if result.report_path and result.report_path.startswith("s3://") else "Local file path",
                 "comparison_summary": {
                     "common_components_count": len(result.comparison.common_components),
                     "unique_components_per_model": {

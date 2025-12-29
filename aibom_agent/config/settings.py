@@ -11,11 +11,10 @@ from pydantic import Field
 class AWSSettings(BaseSettings):
     """AWS-specific configuration."""
     
-    region: str = Field(default="us-west-2", env="AWS_REGION")
+    region: str = Field(default="us-east-1", env="AWS_REGION")
     bedrock_agent_id: Optional[str] = Field(default=None, env="BEDROCK_AGENT_ID")
     bedrock_agent_alias_id: str = Field(default="TSTALIASID", env="BEDROCK_AGENT_ALIAS_ID")
     s3_bucket: Optional[str] = Field(default=None, env="AIBOM_S3_BUCKET")
-    s3_presigned_url_expiry: int = Field(default=86400, env="S3_PRESIGNED_URL_EXPIRY")  # 24 hours
     s3_encryption: bool = Field(default=True, env="S3_ENCRYPTION")
     
     class Config:

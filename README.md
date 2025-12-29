@@ -28,6 +28,7 @@ This project creates an autonomous agent that:
 - ☁️ **Cloud-Native**: Fully deployable to AWS with ARM64 container execution
 - 🔒 **Security-First**: Identifies vulnerabilities, unsafe formats, and compliance gaps
 - 🌍 **Multi-Region**: Supports deployment to multiple AWS regions
+- 📁 **Secure S3 Storage**: Reports stored in private S3 buckets with AES256 encryption
 
 ### 🔍 Enhanced Security Analysis Features
 
@@ -222,6 +223,7 @@ python main_simple.py
 Key configuration options in `aibom_agent/config/settings.py`:
 
 - **AWS Region**: Default region for AWS services
+- **S3 Storage**: Private S3 bucket for secure report storage with AES256 encryption
 - **Bedrock Agent**: Configuration for AWS Bedrock integration
 - **Hugging Face**: API settings and model access
 - **Report Generation**: Output paths and template settings

@@ -48,7 +48,7 @@ agentcore invoke '{"action": "analyze_model", "model_name": "microsoft/DialoGPT-
   "model_name": "microsoft/DialoGPT-medium",
   "security_issues_count": 0,
   "compliance_gaps_count": 0,
-  "report_path": "reports/aibom_report_microsoft_DialoGPT-medium_20251228_162108.html",
+  "report_path": "s3://aibom-reports-339712707840-us-east-1/aibom-reports/aibom_report_microsoft_DialoGPT-medium_20251228_162108.html",
   "aibom_summary": {
     "components_count": 6,
     "vulnerabilities_count": 1,
@@ -98,7 +98,7 @@ agentcore invoke '{
   "models_analyzed": 2,
   "total_security_issues": 0,
   "total_compliance_gaps": 0,
-  "report_path": "reports/aibom_comparison_microsoft_DialoGPT-medium_vs_facebook_blenderbot-400M-distill_20251228_163638.html",
+  "report_path": "s3://aibom-reports-339712707840-us-east-1/aibom-reports/aibom_comparison_microsoft_DialoGPT-medium_vs_facebook_blenderbot-400M-distill_20251228_163638.html",
   "comparison_summary": {
     "common_components_count": 5,
     "unique_components_per_model": {
@@ -390,22 +390,25 @@ Key comparison metrics:
 
 ### Report File Locations
 
-Reports are saved in the `reports/` directory with descriptive names:
+Reports are securely stored in private S3 buckets with descriptive names:
 
-- Single model: `aibom_report_{model_name}_{timestamp}.html`
-- Comparison: `aibom_comparison_{model1}_vs_{model2}_{timestamp}.html`
+- Single model: `s3://bucket-name/aibom-reports/aibom_report_{model_name}_{timestamp}.html`
+- Comparison: `s3://bucket-name/aibom-reports/aibom_comparison_{model1}_vs_{model2}_{timestamp}.html`
 
 ### Accessing Reports
 
+Reports are stored in private S3 buckets and can be accessed by users with appropriate AWS permissions:
+
 ```bash
-# List recent reports
-ls -la reports/ | head -10
+# List recent reports (requires S3 access)
+aws s3 ls s3://aibom-reports-339712707840-us-east-1/aibom-reports/ --region us-east-1
 
-# Open latest report (macOS)
-open reports/$(ls -t reports/ | head -1)
+# Download a specific report
+aws s3 cp s3://aibom-reports-339712707840-us-east-1/aibom-reports/aibom_report_model_timestamp.html ./report.html --region us-east-1
 
-# Open latest report (Linux)
-xdg-open reports/$(ls -t reports/ | head -1)
+# Open downloaded report
+open report.html  # macOS
+xdg-open report.html  # Linux
 ```
 
 ## Monitoring and Debugging

@@ -36,7 +36,6 @@ class AIBOMAgentOrchestrator:
             settings.output_dir,
             s3_bucket=settings.aws.s3_bucket,
             aws_region=settings.aws.region,
-            s3_presigned_url_expiry=settings.aws.s3_presigned_url_expiry,
             s3_encryption=settings.aws.s3_encryption
         )
         
