@@ -102,15 +102,19 @@ class ReportGenerator:
             with open(local_report_path, 'w', encoding='utf-8') as f:
                 f.write(html_content)
             
-            # Upload to S3 if configured
+            # Upload to S3 if configured (but always keep local copy)
+            s3_path = None
             if self.s3_client and self.s3_bucket:
                 s3_key = f"aibom-reports/{report_filename}"
-                s3_url = await self._upload_to_s3(local_report_path, s3_key)
-                if s3_url:
-                    logger.info(f"Single model report uploaded to S3: {s3_url}")
-                    return s3_url
+                s3_path = await self._upload_to_s3(local_report_path, s3_key)
+                if s3_path:
+                    logger.info(f"Single model report uploaded to S3: {s3_path}")
             
             logger.info(f"Single model report generated locally: {local_report_path}")
+            
+            # Return both paths if S3 upload was successful
+            if s3_path:
+                return f"{local_report_path}|{s3_path}"
             return str(local_report_path)
             
         except Exception as e:
@@ -151,15 +155,19 @@ class ReportGenerator:
             with open(local_report_path, 'w', encoding='utf-8') as f:
                 f.write(html_content)
             
-            # Upload to S3 if configured
+            # Upload to S3 if configured (but always keep local copy)
+            s3_path = None
             if self.s3_client and self.s3_bucket:
                 s3_key = f"aibom-reports/{report_filename}"
-                s3_url = await self._upload_to_s3(local_report_path, s3_key)
-                if s3_url:
-                    logger.info(f"Comparison report uploaded to S3: {s3_url}")
-                    return s3_url
+                s3_path = await self._upload_to_s3(local_report_path, s3_key)
+                if s3_path:
+                    logger.info(f"Comparison report uploaded to S3: {s3_path}")
             
             logger.info(f"Comparison report generated locally: {local_report_path}")
+            
+            # Return both paths if S3 upload was successful
+            if s3_path:
+                return f"{local_report_path}|{s3_path}"
             return str(local_report_path)
             
         except Exception as e:

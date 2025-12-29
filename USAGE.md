@@ -175,14 +175,21 @@ Compare models from different domains to understand component diversity:
 agentcore invoke '{
   "action": "compare_models", 
   "model_names": [
-    "microsoft/DialoGPT-medium",     # Conversational
-    "sentence-transformers/all-MiniLM-L6-v2",  # Embedding
-    "facebook/bart-large-mnli",      # Classification
-    "t5-small",                      # Text-to-text
-    "microsoft/codebert-base"        # Code understanding
+    "microsoft/DialoGPT-medium",
+    "sentence-transformers/all-MiniLM-L6-v2",
+    "facebook/bart-large-mnli",
+    "t5-small",
+    "microsoft/codebert-base"
   ]
 }'
 ```
+
+This compares:
+- **microsoft/DialoGPT-medium**: Conversational model
+- **sentence-transformers/all-MiniLM-L6-v2**: Embedding model  
+- **facebook/bart-large-mnli**: Classification model
+- **t5-small**: Text-to-text generation model
+- **microsoft/codebert-base**: Code understanding model
 
 ### Security-Focused Analysis
 
@@ -192,12 +199,17 @@ Analyze models known to have different security profiles:
 agentcore invoke '{
   "action": "compare_models", 
   "model_names": [
-    "gpt2",                    # Older model
-    "microsoft/DialoGPT-medium",  # Newer conversational
-    "facebook/opt-125m"        # Recent open model
+    "gpt2",
+    "microsoft/DialoGPT-medium",
+    "facebook/opt-125m"
   ]
 }'
 ```
+
+This compares:
+- **gpt2**: Older model with different security profile
+- **microsoft/DialoGPT-medium**: Newer conversational model
+- **facebook/opt-125m**: Recent open model
 
 ### Model Size Comparison
 
@@ -491,11 +503,16 @@ Compare models from different vendors:
 agentcore invoke '{
   "action": "compare_models", 
   "model_names": [
-    "microsoft/DialoGPT-medium",  # Microsoft
-    "facebook/blenderbot-400M-distill",  # Meta
-    "google/flan-t5-base"  # Google
+    "microsoft/DialoGPT-medium",
+    "facebook/blenderbot-400M-distill",
+    "google/flan-t5-base"
   ]
 }'
 ```
+
+This compares models from:
+- **Microsoft**: DialoGPT-medium
+- **Meta/Facebook**: BlenderBot
+- **Google**: FLAN-T5
 
 This comprehensive usage guide covers the most common scenarios and best practices for using the AIBOM Agent System effectively.

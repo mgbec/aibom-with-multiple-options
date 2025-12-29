@@ -204,7 +204,7 @@ agents:
     bedrock_agentcore:
       agent_id: aibom_agent_system_west-xJwUxW9sGq
       agent_arn: arn:aws:bedrock-agentcore:us-west-2:339712707840:runtime/aibom_agent_system_west-xJwUxW9sGq
-      agent_session_id: 6b8640ab-6fd7-4347-854e-2e5ae1faab4a
+      agent_session_id: 2a16b45d-fae1-444e-823e-4a7b4b0e27d0
     codebuild:
       project_name: bedrock-agentcore-aibom_agent_system_west-builder
       execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-b8fafb0d44
