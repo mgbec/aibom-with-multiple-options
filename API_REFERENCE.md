@@ -97,13 +97,42 @@ agentcore invoke '{
 - `success` (boolean): Always true for successful requests
 - `action` (string): Echo of the requested action
 - `model_name` (string): Echo of the analyzed model name
-- `security_issues_count` (integer): Number of security issues identified
+- `security_issues_count` (integer): Number of security issues identified (enhanced analysis may detect more issues)
 - `compliance_gaps_count` (integer): Number of compliance gaps found
-- `report_path` (string): Path to the generated HTML report
+- `report_path` (string): Path to the generated HTML report with enhanced interactive sections
 - `aibom_summary` (object): Summary of AIBOM analysis
   - `components_count` (integer): Total number of components in the AIBOM
   - `vulnerabilities_count` (integer): Number of known vulnerabilities
-  - `risk_level` (string): Overall risk level ("LOW", "MEDIUM", "HIGH")
+  - `risk_level` (string): Overall risk level ("LOW", "MEDIUM", "HIGH", "CRITICAL")
+
+### Enhanced Security Analysis in Reports
+
+The generated HTML reports now include detailed interactive sections:
+
+#### Analysis Methodology Section
+- Transparent explanation of the security assessment approach
+- Data sources analyzed (AIBOM components, model metadata, file listings)
+- Step-by-step analysis process
+- Tools and techniques used
+- Coverage scope and limitations
+
+#### Risk Factors Analysis Section  
+- **Technical Risks**: Unsafe serialization, dependency vulnerabilities, code injection, data poisoning
+- **Operational Risks**: Supply chain security, licensing compliance, maintenance status
+- **Privacy Risks**: Data exposure, model inversion, membership inference
+
+#### Security Checklist Section
+- File format analysis (safe/unsafe formats detected)
+- Dependency vulnerability scanning results
+- License compliance verification
+- Code analysis status (when source available)
+- Provenance verification (author trustworthiness)
+
+#### Threat Model Section
+- Attack vectors with likelihood and impact ratings
+- Threat actors and their capabilities  
+- Assets at risk identification
+- Security controls (preventive, detective, corrective)
 
 ### Successful Multi-Model Comparison
 
@@ -317,21 +346,22 @@ agentcore invoke '{"action": "analyze_model", "model_name": "test-model"}'
 
 ## Response Time Expectations
 
-### Single Model Analysis
-- **Small models** (<100MB): 30-60 seconds
-- **Medium models** (100MB-1GB): 1-3 minutes  
-- **Large models** (>1GB): 3-10 minutes
+### Single Model Analysis (Enhanced Security Analysis)
+- **Small models** (<100MB): 45-90 seconds
+- **Medium models** (100MB-1GB): 2-4 minutes  
+- **Large models** (>1GB): 4-12 minutes
 
-### Multi-Model Comparison
-- **2-3 models**: 2-5 minutes
-- **4-6 models**: 5-15 minutes
-- **7-10 models**: 15-30 minutes
+### Multi-Model Comparison (Enhanced Analysis)
+- **2-3 models**: 3-8 minutes
+- **4-6 models**: 8-20 minutes
+- **7-10 models**: 20-40 minutes
 
 ### Factors Affecting Performance
 - Model size and complexity
 - Network latency to Hugging Face
-- AWS Bedrock service load
+- AWS Bedrock service load (Claude 3 Sonnet processing time)
 - Number of components in AIBOM
+- **Enhanced analysis processing**: Additional time for detailed security analysis, risk factor assessment, and threat modeling
 
 ## Monitoring and Observability
 

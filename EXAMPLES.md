@@ -4,6 +4,7 @@ This document provides real-world examples and scenarios for using the AIBOM Age
 
 ## Table of Contents
 
+- [Enhanced Security Analysis Features](#enhanced-security-analysis-features)
 - [Enterprise Security Audit](#enterprise-security-audit)
 - [Model Selection for Production](#model-selection-for-production)
 - [Compliance Reporting](#compliance-reporting)
@@ -11,6 +12,41 @@ This document provides real-world examples and scenarios for using the AIBOM Age
 - [Model Evolution Tracking](#model-evolution-tracking)
 - [Automated CI/CD Integration](#automated-cicd-integration)
 - [Research and Development](#research-and-development)
+
+## Enhanced Security Analysis Features
+
+### New Transparency Capabilities
+
+The AIBOM Agent System now provides unprecedented transparency in AI model security assessment. Each analysis includes:
+
+#### Interactive Report Sections
+- **🔍 Analysis Methodology**: Click to expand and see exactly how the security analysis was performed
+- **⚡ Risk Factors**: Detailed breakdown of technical, operational, and privacy risks
+- **✅ Security Checklist**: Visual indicators showing what security aspects were verified
+- **🎯 Threat Model**: Comprehensive threat analysis with attack vectors and mitigations
+
+#### Example Enhanced Analysis Output
+```json
+{
+  "success": true,
+  "action": "analyze_model", 
+  "model_name": "microsoft/DialoGPT-medium",
+  "security_issues_count": 2,
+  "compliance_gaps_count": 2,
+  "report_path": "reports/aibom_report_microsoft_DialoGPT-medium_20251228_203114.html",
+  "aibom_summary": {
+    "components_count": 6,
+    "vulnerabilities_count": 1,
+    "risk_level": "MEDIUM"
+  }
+}
+```
+
+The generated HTML report now includes:
+- **Analysis Methodology**: "Structured analysis of model metadata, file formats, components, dependencies, and potential attack vectors using a risk-based methodology"
+- **Risk Factors**: Technical risks (unsafe serialization), operational risks (supply chain), privacy risks (data exposure)
+- **Security Checklist**: File format analysis ✓, dependency scan ✓, license compliance ⚠️, code analysis ✗, provenance verification ✓
+- **Threat Model**: 5 attack vectors including prompt injection (HIGH likelihood, MEDIUM impact) and model poisoning (LOW likelihood, HIGH impact)
 
 ## Enterprise Security Audit
 

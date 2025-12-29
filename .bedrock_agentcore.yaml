@@ -1,4 +1,4 @@
-default_agent: aibom_agent_system_west
+default_agent: aibom_agent_system_v2
 agents:
   aibom_agent_system:
     name: aibom_agent_system
@@ -60,7 +60,7 @@ agents:
     is_generated_by_agentcore_create: false
   aibom_agent_system_v2:
     name: aibom_agent_system_v2
-    entrypoint: main.py
+    entrypoint: /home/mom/Desktop/aibom2/main.py
     deployment_type: container
     runtime_type: null
     platform: linux/arm64
@@ -88,7 +88,7 @@ agents:
     bedrock_agentcore:
       agent_id: aibom_agent_system_v2-5G1NZL8Pnl
       agent_arn: arn:aws:bedrock-agentcore:us-east-1:339712707840:runtime/aibom_agent_system_v2-5G1NZL8Pnl
-      agent_session_id: 573b0ad6-a310-44f4-a33b-226b00658808
+      agent_session_id: 6f812e8f-b99a-48f9-9735-e5590e15ec3e
     codebuild:
       project_name: bedrock-agentcore-aibom_agent_system_v2-builder
       execution_role: arn:aws:iam::339712707840:role/AmazonBedrockAgentCoreSDKCodeBuild-us-east-1-a7a2546bb6
@@ -100,7 +100,7 @@ agents:
       memory_name: aibom_agent_system_v2_mem
       event_expiry_days: 30
       first_invoke_memory_check_done: true
-      was_created_by_toolkit: true
+      was_created_by_toolkit: false
     identity:
       credential_providers: []
       workload: null

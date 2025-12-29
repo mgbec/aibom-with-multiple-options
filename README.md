@@ -29,6 +29,27 @@ This project creates an autonomous agent that:
 - 🔒 **Security-First**: Identifies vulnerabilities, unsafe formats, and compliance gaps
 - 🌍 **Multi-Region**: Supports deployment to multiple AWS regions
 
+### 🔍 Enhanced Security Analysis Features
+
+The system now provides unprecedented transparency in AI model security assessment:
+
+- **📋 Analysis Methodology**: Detailed explanation of the security assessment approach, data sources, analysis steps, tools used, coverage scope, and limitations
+- **⚡ Risk Factor Breakdown**: Comprehensive analysis of:
+  - **Technical Risks**: Unsafe serialization, dependency vulnerabilities, code injection, data poisoning
+  - **Operational Risks**: Supply chain security, licensing compliance, maintenance status
+  - **Privacy Risks**: Data exposure, model inversion, membership inference attacks
+- **✅ Security Checklist**: Verification status and findings for:
+  - File format analysis (safe/unsafe formats)
+  - Dependency vulnerability scanning
+  - License compliance checking
+  - Code analysis (when available)
+  - Provenance verification
+- **🎯 Threat Modeling**: Detailed threat analysis including:
+  - Attack vectors with likelihood and impact assessment
+  - Threat actors and their capabilities
+  - Assets at risk identification
+  - Preventive, detective, and corrective security controls
+
 ## Quick Start
 
 ### Prerequisites
@@ -209,9 +230,11 @@ Key configuration options in `aibom_agent/config/settings.py`:
 
 ### Common Issues
 
-1. **Ping Endpoint Errors**: These are cosmetic and don't affect functionality
+1. **Ping Endpoint Errors**: These are cosmetic and don't affect functionality - health checks now work properly
 2. **ARM64 Compatibility**: Ensure Docker base images support ARM64
 3. **Region Permissions**: Verify AWS permissions in target regions
+4. **Enhanced Analysis Timeouts**: The new detailed security analysis takes longer (2-4 minutes per model) due to comprehensive AI-powered assessment
+5. **Bedrock Service Limits**: Enhanced analysis uses Claude 3 Sonnet - monitor for rate limits during high-volume analysis
 
 ### Getting Help
 
@@ -232,6 +255,26 @@ The OWASP AIBOM Generator provides the foundational framework for generating sta
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
+
+## Recent Updates
+
+### v2.0 - Enhanced Security Analysis (December 2024)
+- ✅ **Fixed**: Ping endpoint health check issues resolved
+- 🆕 **Enhanced Security Analysis**: Comprehensive transparency in AI model security assessment
+  - **Analysis Methodology**: Detailed explanation of security assessment approach
+  - **Risk Factor Breakdown**: Technical, operational, and privacy risk analysis
+  - **Security Checklist**: Verification status for all security aspects
+  - **Threat Modeling**: Attack vectors with likelihood, impact, and mitigation strategies
+- 🆕 **Interactive Reports**: Collapsible sections for detailed analysis exploration
+- 🆕 **Claude 3 Sonnet Integration**: Advanced AI-powered security insights
+- 🆕 **Enhanced Bedrock Integration**: Improved AWS Bedrock service connectivity
+- 📊 **Improved Report Templates**: Better visualization and user experience
+
+### v1.0 - Initial Release
+- Core AIBOM generation and analysis functionality
+- Multi-model comparison capabilities
+- AWS AgentCore runtime integration
+- Basic security analysis and reporting
 
 ## License
 

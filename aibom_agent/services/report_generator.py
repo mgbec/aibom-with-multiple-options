@@ -134,12 +134,33 @@ class ReportGenerator:
         .component { background: #e9ecef; padding: 15px; margin: 10px 0; border-radius: 5px; }
         .vulnerability { background: #f8d7da; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #dc3545; }
         .recommendation { background: #d1ecf1; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #17a2b8; }
+        .methodology { background: #e7f3ff; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .risk-factors { background: #fff8e1; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .security-checklist { background: #f3e5f5; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .threat-model { background: #ffebee; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .expandable { cursor: pointer; }
+        .expandable:hover { background-color: rgba(0,0,0,0.05); }
+        .collapsible-content { display: none; margin-top: 10px; }
+        .collapsible-content.show { display: block; }
         h1, h2, h3 { color: #333; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-high { background: #dc3545; color: white; }
         .badge-medium { background: #ffc107; color: black; }
         .badge-low { background: #28a745; color: white; }
+        .badge-critical { background: #6f42c1; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .card { background: white; padding: 15px; border-radius: 5px; border: 1px solid #dee2e6; }
+        .status-checked { color: #28a745; font-weight: bold; }
+        .status-unchecked { color: #dc3545; font-weight: bold; }
     </style>
+    <script>
+        function toggleCollapsible(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('show');
+            const icon = element.querySelector('.toggle-icon');
+            icon.textContent = content.classList.contains('show') ? '▼' : '▶';
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -170,6 +191,8 @@ class ReportGenerator:
             <div class="vulnerability">
                 <strong>{{ vuln.get('type', 'Unknown') }}</strong>: {{ vuln.get('description', 'No description') }}
                 {% if vuln.get('cve_id') %}<br><small>CVE: {{ vuln.cve_id }}</small>{% endif %}
+                {% if vuln.get('impact') %}<br><small>Impact: {{ vuln.impact }}</small>{% endif %}
+                {% if vuln.get('mitigation') %}<br><small>Mitigation: {{ vuln.mitigation }}</small>{% endif %}
             </div>
             {% endfor %}
             {% endif %}
@@ -180,6 +203,120 @@ class ReportGenerator:
             <div class="recommendation">{{ rec }}</div>
             {% endfor %}
             {% endif %}
+        </div>
+
+        <div class="methodology">
+            <h3 class="expandable" onclick="toggleCollapsible(this)">
+                <span class="toggle-icon">▶</span> 🔍 Analysis Methodology
+            </h3>
+            <div class="collapsible-content">
+                <p><strong>Approach:</strong> {{ result.security_analysis.analysis_methodology.get('approach', 'Standard analysis') }}</p>
+                <p><strong>Data Sources:</strong> {{ result.security_analysis.analysis_methodology.get('data_sources', []) | join(', ') }}</p>
+                <p><strong>Analysis Steps:</strong></p>
+                <ul>
+                {% for step in result.security_analysis.analysis_methodology.get('analysis_steps', []) %}
+                    <li>{{ step }}</li>
+                {% endfor %}
+                </ul>
+                <p><strong>Tools Used:</strong> {{ result.security_analysis.analysis_methodology.get('tools_used', []) | join(', ') }}</p>
+                <p><strong>Coverage:</strong> {{ result.security_analysis.analysis_methodology.get('coverage', 'Basic analysis') }}</p>
+                {% if result.security_analysis.analysis_methodology.get('limitations') %}
+                <p><strong>Limitations:</strong> {{ result.security_analysis.analysis_methodology.limitations }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="risk-factors">
+            <h3 class="expandable" onclick="toggleCollapsible(this)">
+                <span class="toggle-icon">▶</span> ⚡ Risk Factors Analysis
+            </h3>
+            <div class="collapsible-content">
+                <div class="grid">
+                    <div class="card">
+                        <h4>🔧 Technical Risks</h4>
+                        {% for risk_type, details in result.security_analysis.risk_factors.get('technical_risks', {}).items() %}
+                        <p><strong>{{ risk_type.replace('_', ' ').title() }}:</strong> 
+                        {% if details.get('present') %}
+                            <span class="badge badge-high">Present</span>
+                        {% else %}
+                            <span class="badge badge-low">Not Detected</span>
+                        {% endif %}
+                        </p>
+                        {% if details.get('details') %}<small>{{ details.details }}</small>{% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="card">
+                        <h4>⚙️ Operational Risks</h4>
+                        {% for risk_type, details in result.security_analysis.risk_factors.get('operational_risks', {}).items() %}
+                        <p><strong>{{ risk_type.replace('_', ' ').title() }}:</strong> {{ details.get('risk', 'Unknown') }}</p>
+                        {% if details.get('trust_score') %}<small>Trust Score: {{ details.trust_score }}/10</small>{% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="card">
+                        <h4>🔐 Privacy Risks</h4>
+                        {% for risk_type, details in result.security_analysis.risk_factors.get('privacy_risks', {}).items() %}
+                        <p><strong>{{ risk_type.replace('_', ' ').title() }}:</strong> {{ details.get('risk', 'Unknown') }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="security-checklist">
+            <h3 class="expandable" onclick="toggleCollapsible(this)">
+                <span class="toggle-icon">▶</span> ✅ Security Checklist
+            </h3>
+            <div class="collapsible-content">
+                <div class="grid">
+                    {% for check_name, check_data in result.security_analysis.security_checklist.items() %}
+                    <div class="card">
+                        <h4>{{ check_name.replace('_', ' ').title() }}</h4>
+                        <p><strong>Status:</strong> 
+                        {% if check_data.get('checked') %}
+                            <span class="status-checked">✓ Checked</span>
+                        {% else %}
+                            <span class="status-unchecked">✗ Not Checked</span>
+                        {% endif %}
+                        </p>
+                        {% if check_data.get('findings') %}
+                        <p><strong>Findings:</strong> {{ check_data.findings }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="threat-model">
+            <h3 class="expandable" onclick="toggleCollapsible(this)">
+                <span class="toggle-icon">▶</span> 🎯 Threat Model
+            </h3>
+            <div class="collapsible-content">
+                <h4>Attack Vectors</h4>
+                {% for vector in result.security_analysis.threat_model.get('attack_vectors', []) %}
+                <div class="card">
+                    <h5>{{ vector.get('vector', 'Unknown Vector') }}</h5>
+                    <p><strong>Likelihood:</strong> <span class="badge badge-{{ vector.get('likelihood', 'medium').lower() }}">{{ vector.get('likelihood', 'MEDIUM') }}</span></p>
+                    <p><strong>Impact:</strong> <span class="badge badge-{{ vector.get('impact', 'medium').lower() }}">{{ vector.get('impact', 'MEDIUM') }}</span></p>
+                    <p><strong>Description:</strong> {{ vector.get('description', 'No description') }}</p>
+                    <p><strong>Mitigation:</strong> {{ vector.get('mitigation', 'No mitigation specified') }}</p>
+                </div>
+                {% endfor %}
+                
+                <h4>Security Controls</h4>
+                <div class="grid">
+                    {% for control_type, controls in result.security_analysis.threat_model.get('security_controls', {}).items() %}
+                    <div class="card">
+                        <h5>{{ control_type.title() }} Controls</h5>
+                        <ul>
+                        {% for control in controls %}
+                            <li>{{ control }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
         
         <div class="components">

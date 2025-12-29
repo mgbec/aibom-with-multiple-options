@@ -133,11 +133,19 @@ def invoke(payload: Dict[str, Any], context) -> Dict[str, Any]:
         }
 
 
-# @app.ping
-# def health_check():
-#     """Custom health check for the AIBOM Agent System."""
-#     # Return None to avoid the .value attribute error
-#     return None
+@app.ping
+def health_check():
+    """Custom health check for the AIBOM Agent System."""
+    try:
+        # Basic health check - verify we can import core modules
+        from aibom_agent.config.settings import Settings
+        settings = Settings.load()
+        
+        # Return a simple string that AgentCore can handle
+        return "healthy"
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return "unhealthy"
 
 
 if __name__ == "__main__":

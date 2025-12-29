@@ -49,6 +49,12 @@ class SecurityAnalysis:
     unsafe_formats: List[str]
     suspicious_files: List[str]
     license_issues: List[str]
+    
+    # Enhanced analysis details for transparency
+    analysis_methodology: Dict[str, Any]  # Explanation of analysis approach
+    risk_factors: Dict[str, Any]  # Detailed breakdown of risk contributors
+    security_checklist: Dict[str, Any]  # What was checked and results
+    threat_model: Dict[str, Any]  # Potential attack vectors and mitigations
 
 
 @dataclass

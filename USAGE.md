@@ -335,9 +335,49 @@ Key metrics to focus on:
 
 - **components_count**: Number of components in the AIBOM
 - **vulnerabilities_count**: Known security vulnerabilities
-- **risk_level**: Overall risk assessment (LOW, MEDIUM, HIGH)
+- **risk_level**: Overall risk assessment (LOW, MEDIUM, HIGH, CRITICAL)
 - **security_issues_count**: Number of security concerns identified
 - **compliance_gaps_count**: Compliance-related issues
+
+### Enhanced Security Analysis Sections
+
+The reports now include detailed interactive sections:
+
+#### 🔍 Analysis Methodology
+- **Approach**: Explanation of the security assessment methodology
+- **Data Sources**: What information was analyzed
+- **Analysis Steps**: Step-by-step process followed
+- **Tools Used**: Security analysis tools and techniques employed
+- **Coverage**: Scope of the analysis performed
+- **Limitations**: Any constraints or assumptions made
+
+#### ⚡ Risk Factors Analysis
+- **Technical Risks**: 
+  - Unsafe serialization (pickle files, etc.)
+  - Dependency vulnerabilities
+  - Code injection risks
+  - Data poisoning potential
+- **Operational Risks**:
+  - Supply chain security
+  - Licensing compliance
+  - Maintenance and support status
+- **Privacy Risks**:
+  - Data exposure potential
+  - Model inversion vulnerabilities
+  - Membership inference attacks
+
+#### ✅ Security Checklist
+- **File Format Analysis**: Safe vs unsafe formats detected
+- **Dependency Scan**: Vulnerability scanning results
+- **License Compliance**: Legal compliance verification
+- **Code Analysis**: Source code security review (when available)
+- **Provenance Verification**: Author and source trustworthiness
+
+#### 🎯 Threat Model
+- **Attack Vectors**: Specific threats with likelihood and impact ratings
+- **Threat Actors**: Potential attackers and their capabilities
+- **Assets at Risk**: What could be compromised
+- **Security Controls**: Preventive, detective, and corrective measures
 
 ### Understanding Comparison Reports
 
